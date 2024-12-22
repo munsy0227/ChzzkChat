@@ -152,15 +152,17 @@ class ChzzkChat:
                     continue
 
                 for chat_data in raw_message['bdy']:
-                    
+
                     if chat_data['uid'] == 'anonymous':
                         nickname = '익명의 후원자'
+                        uuid = chat_data['uid']
 
                     else:
-                        
+
                         try:
                             profile_data = json.loads(chat_data['profile'])
                             nickname = profile_data["nickname"]
+                            uuid = chat_data['uid']
 
                             if 'msg' not in chat_data:
                                 continue
@@ -169,9 +171,9 @@ class ChzzkChat:
                             continue
 
                     now = datetime.datetime.fromtimestamp(chat_data['msgTime']/1000)
-                    now = datetime.datetime.strftime(now, '%Y-%m-%d %H:%M:%S')
+                    now = datetime.datetime.strftime(now, '%Y-%m-%d %H:%M:%S.%f')[:-3]
 
-                    self.logger.info(f'[{now}][{chat_type}] {nickname} : {chat_data["msg"]}')
+                    self.logger.info(f'[{now}][{chat_type}] {nickname} (UUID: {uuid}) : {chat_data["msg"]}')
                 
             except:
                 pass
